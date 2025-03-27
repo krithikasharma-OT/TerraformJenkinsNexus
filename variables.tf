@@ -11,7 +11,7 @@ variable "jenkins_instance_type" {
 }
 
 variable "jenkins_disk_space" {
-  default = "20"
+  default = "25"
 }
 
 variable "jenkins_key_name" {
@@ -27,7 +27,7 @@ variable "SonarNexusServer_instance_type" {
 }
 
 variable "SonarNexusServer_disk_space" {
-  default = "20"
+  default = "15"
 }
 
 variable "SonarNexusServer_instance_key_name" {
