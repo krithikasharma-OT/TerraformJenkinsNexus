@@ -37,7 +37,7 @@ sudo apt install -y unzip
 unzip awscliv2.zip
 sudo ./aws/install
 
-echo "Install Docker..."
+echo "Installing Docker..."
 sudo apt-get update
 sudo apt-get install -y ca-certificates curl
 sudo install -m 0755 -d /etc/apt/keyrings
@@ -52,7 +52,8 @@ echo \
 sudo apt-get update
 
 sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-
+sudo usermod -aG docker $USER
+sudo systemctl restart docker
 
 echo "Installing Kubectl..."
 curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.19.6/2021-01-05/bin/linux/amd64/kubectl
