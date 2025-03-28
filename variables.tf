@@ -33,3 +33,19 @@ variable "SonarNexusServer_disk_space" {
 variable "SonarNexusServer_instance_key_name" {
   default = "Opstree"
 }
+
+variable "MongoDbServer_instance_ami_id" {
+  default = "ami-0e35ddab05955cf57"
+}
+
+variable "MongoDbServer_instance_type" {
+  default = "t2.micro"
+}
+
+variable "MongoDbServer_disk_space" {
+  default = "10"
+}
+
+variable "MongoDbServer_instance_key_name" {
+  default = "Opstree"
+}
