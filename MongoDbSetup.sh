@@ -35,3 +35,12 @@ EOF
 
 
 sudo systemctl restart mongod
+
+
+
+#
+# The connection string be in the below format:
+#
+#CONN_STRING="mongodb://$MONGO_USERNAME:$MONGO_PASSWORD@$MONGO_HOST:$MONGO_PORT/$MONGO_ADMIN_DB"
+#mongosh --host localhost --port 27017 -u "Jenkins" -p "jenkins123" --authenticationDatabase "MyDb"
+#mongosh --host 3.108.228.130 --port 27017 -u "Jenkins" -p "jenkins123" --authenticationDatabase "MyDb"
