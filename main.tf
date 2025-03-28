@@ -19,8 +19,24 @@ data "aws_subnets" "public_subnets" {
   }
 }
 
+data "aws_subnets" "private_subnets" {
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.eks_vpc.id]
+  }
+
+  filter {
+    name   = "tag:Name"
+    values = ["*Private*"]
+  }
+}
+
 output "public_subnet_ids" {
   value = data.aws_subnets.public_subnets.ids
+}
+
+output "private_subnet_ids" {
+  value = data.aws_subnets.private_subnets.ids
 }
 
 
@@ -109,7 +125,6 @@ resource "aws_security_group" "SonarNexusServer_sg" {
   description = "Security group for Sonar Nexus server"
   vpc_id      = data.aws_vpc.eks_vpc.id  
 
-  # Allow inbound traffic on Jenkins port (8080)
   ingress {
     from_port   = 9000
     to_port     = 9000
@@ -117,7 +132,6 @@ resource "aws_security_group" "SonarNexusServer_sg" {
     cidr_blocks = ["0.0.0.0/0"]  
   }
 
-  # Allow inbound SSH (port 22)
   ingress {
     from_port   = 8081
     to_port     = 8081
@@ -125,7 +139,6 @@ resource "aws_security_group" "SonarNexusServer_sg" {
     cidr_blocks = ["0.0.0.0/0"]  
   }
 
-  # Allow ICMP (ping)
   ingress {
     from_port   = -1  
     to_port     = -1
@@ -150,5 +163,64 @@ resource "aws_security_group" "SonarNexusServer_sg" {
 
   tags = {
     Name = "Jenkins-SG"
+  }
+}
+
+resource "aws_instance" "MongoDbServer_instance" {
+  ami           = var.MongoDbServer_instance_ami_id
+  instance_type = var.MongoDbServer_instance_type
+  subnet_id     = data.aws_subnets.private_subnets.ids[0]
+  key_name      = var.MongoDbServer_instance_key_name
+  security_groups = [aws_security_group.MongoDbServer_sg.id]
+  
+  root_block_device {
+    volume_size = var.MongoDbServer_disk_space
+    volume_type = "gp3"
+  }
+
+  tags = {
+    Name = "MongoDb-Server"
+  }
+
+  user_data = file("./MongoDbSetup.sh")
+}
+
+resource "aws_security_group" "MongoDbServer_sg" {
+  name_prefix = "MongoDb-sg"
+  description = "Security group for MongoDb server"
+  vpc_id      = data.aws_vpc.eks_vpc.id  
+
+  ingress {
+    from_port   = 27017
+    to_port     = 27017
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]  
+  }
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]  
+  }
+
+  # Allow ICMP (ping)
+  ingress {
+    from_port   = -1  
+    to_port     = -1
+    protocol    = "icmp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # Allow all outbound traffic
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "MongoDb-SG"
   }
 }
