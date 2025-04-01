@@ -27,7 +27,7 @@ use $MONGO_ADMIN_DB;
 db.createUser({
     user: "$MONGO_USERNAME",
     pwd: "$MONGO_PASSWORD",
-    roles: [{ role: "readWrite", db: "$MONGO_DB_NAME" }]
+    roles: [{ role: "dbAdmin", db: "$MONGO_DB_NAME" }]
 });
 EOF
 
