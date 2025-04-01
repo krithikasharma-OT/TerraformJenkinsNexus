@@ -17,6 +17,21 @@ sudo sed -i 's/\(bindIp:\) 127.0.0.1/\1 0.0.0.0/' /etc/mongod.conf
 
 sudo systemctl restart mongod
 
+ADMIN_USER=admin
+ADMIN_PASSWORD=admin123
+
+mongosh --host localhost --port 27017 <<EOF
+use admin;
+db.createUser({
+  user: "$ADMIN_USER",
+  pwd: "$ADMIN_PASSWORD",
+  roles: [{ role: "root", db: "admin" }]
+});
+EOF
+
+sudo sed -i '/^#security:/c\security:\n  authorization: enabled' /etc/mongod.conf
+
+
 MONGO_HOST="localhost"  
 MONGO_PORT="27017"
 MONGO_DB_NAME="YelpDB"
@@ -24,18 +39,14 @@ MONGO_ADMIN_DB="admin"
 MONGO_USERNAME="Jenkins"
 MONGO_PASSWORD="jenkins123"
 
-mongosh --host $MONGO_HOST --port $MONGO_PORT <<EOF
+mongosh --host $MONGO_HOST --port $MONGO_PORT -u  $ -p $ADMIN_PASSWORD --authenticationDatabase "admin" <<EOF
 use $MONGO_ADMIN_DB;
 db.createUser({
     user: "$MONGO_USERNAME",
     pwd: "$MONGO_PASSWORD",
     roles: [{ role: "readWrite", db: "$MONGO_DB_NAME" }, { role: "dbAdmin", db: "$MONGO_DB_NAME" }]
 });
-
 EOF
-
-
-sudo sed -i '/^#security:/c\security:\n  authorization: enabled' /etc/mongod.conf
 
 sudo systemctl restart mongod
 
