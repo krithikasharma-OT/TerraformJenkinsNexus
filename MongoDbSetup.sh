@@ -20,7 +20,7 @@ sudo systemctl restart mongod
 MONGO_HOST="localhost"  
 MONGO_PORT="27017"
 MONGO_DB_NAME="YelpDB"
-MONGO_ADMIN_DB="MyDb"
+MONGO_ADMIN_DB="admin"
 MONGO_USERNAME="Jenkins"
 MONGO_PASSWORD="jenkins123"
 
