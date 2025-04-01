@@ -39,7 +39,7 @@ MONGO_ADMIN_DB="admin"
 MONGO_USERNAME="Jenkins"
 MONGO_PASSWORD="jenkins123"
 
-mongosh --host $MONGO_HOST --port $MONGO_PORT -u  $ -p $ADMIN_PASSWORD --authenticationDatabase "admin" <<EOF
+mongosh --host $MONGO_HOST --port $MONGO_PORT -u  $ADMIN_USER -p $ADMIN_PASSWORD --authenticationDatabase "admin" <<EOF
 use $MONGO_ADMIN_DB;
 db.createUser({
     user: "$MONGO_USERNAME",
