@@ -15,6 +15,8 @@ sudo systemctl enable mongod
 
 sudo sed -i 's/\(bindIp:\) 127.0.0.1/\1 0.0.0.0/' /etc/mongod.conf
 
+sudo systemctl restart mongod
+
 MONGO_HOST="localhost"  
 MONGO_PORT="27017"
 MONGO_DB_NAME="YelpDB"
@@ -31,7 +33,6 @@ db.createUser({
 });
 
 EOF
-
 
 
 sudo sed -i '/^#security:/c\security:\n  authorization: enabled' /etc/mongod.conf
